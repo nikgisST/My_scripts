@@ -1,4 +1,4 @@
-
+# FIRST PART - THIS IS THE SAME LOGICAL STRUCTURE OF THE TASK:
 # -*- coding: utf-8 -*-
 
 import arcpy
@@ -363,6 +363,8 @@ class Tool:
                         pass
                     cursor.updateRow(row)
 
+
+        # SECOND PART - THIS ARE EXAMPLE DATA FOR THE TASK:
         ######################################################
         # BAY CLASS calculated by SWITCHINGFACILITY CLASS
         switching_facility_path = r"D:\UN\set_DB\databases\GISRO_PILOT.gdb\SwitchingFacility"
