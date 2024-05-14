@@ -351,7 +351,7 @@ class Tool:
                     relationship_exists = check_relationship(circuit_source_fc, global_id)
                     if voltage <= 1 and subsource == 1:
                         row[2] = 2
-                    elif 1 < voltage <= 60 and relationship_exists:
+                    elif 1 < voltage <= 35 and relationship_exists:
                         row[2] = 1
                     else:
                         # High voltage scenario with no specific update condition
