@@ -365,7 +365,7 @@ class Tool:
                     cursor.updateRow(row)
 
 
-        # SECOND PART - THIS ARE EXAMPLE DATA FOR THE TASK:
+        # SECOND PART - THESE ARE EXAMPLE DATA FOR THE TASK:
         ######################################################
         # BAY CLASS calculated by SWITCHINGFACILITY CLASS
         switching_facility_path = r"D:\UN\set_DB\databases\GISRO_PILOT.gdb\SwitchingFacility"
