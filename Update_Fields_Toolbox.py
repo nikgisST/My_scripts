@@ -44,7 +44,7 @@ class Tool:
             parameterType="Required",
             direction="Input")
         params.append(target_db_param)
-
+        
         return params
 
     def isLicensed(self):
@@ -64,9 +64,6 @@ class Tool:
 
     def execute(self, parameters, messages):
         """The source code of the tool."""
-        import arcpy
-        import re
-
         def check_field_existence(feature_class, field_name):
             """
             Check if a specified field exists within a given feature class.
@@ -80,8 +77,7 @@ class Tool:
             else:
                 arcpy.AddWarning(f"Field {field_name} already exists in {feature_class}.")
 
-        def update_fc_from_dict(source_fc, destination_fc, source_key_field, destination_key_field, field_pairs,
-                                where_clause):
+        def update_fc_from_dict(source_fc, destination_fc, source_key_field, destination_key_field, field_pairs, where_clause):
             """
             Update fields in a destination feature class based on values from a source feature class.
             Parameters:
@@ -233,8 +229,7 @@ class Tool:
             total_updated_features = len(updated_features)
             #print(f"Total updated features in all categories: {total_updated_features}")
 
-        def update_line_fc_within_station_boundary(line_fc, station_fc, field_name='LINE_STATUS', field_type='TEXT',
-                                                   field_length=15):
+        def update_line_fc_within_station_boundary(line_fc, station_fc, field_name='LINE_STATUS', field_type='TEXT', field_length=15):
             """
             Update line feature class based on whether lines are within or partially within the boundaries of station polygons.
             Parameters:
@@ -279,8 +274,7 @@ class Tool:
                 arcpy.DeleteField_management(line_fc, field_name)
                 #print(f"Field '{field_name}' was deleted from {line_fc}.")
 
-        def update_point_fc_within_station_boundary(point_fc, station_fc, field_name='POINT_STATUS', field_type='TEXT',
-                                                    field_length=15):
+        def update_point_fc_within_station_boundary(point_fc, station_fc, field_name='POINT_STATUS', field_type='TEXT', field_length=15):
             """
             Updates point feature class based on spatial relationships with station boundaries.
             Points can be inside, on the boundary, or outside station polygons.
