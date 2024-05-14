@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import arcpy
+import re
 
 
 class Toolbox:
