@@ -1,17 +1,21 @@
+# This code updates fields in 20 feature classes within a geodatabase.
+# Based on both spatial relationships - Arcpy Module
+# Or logical relationships by matching values from other feature classes - Origin key == Foreign key.
+
 import arcpy
 
-#def check_field_existence(feature_class, field_name):
-    #"""
-    #Check if a specified field exists within a given feature class.
-    #Parameters:
-    #feature_class (str): Path to the feature class.
-    #field_name (str): Name of the field to check.
-    #"""
-    #fields = [field.name for field in arcpy.ListFields(feature_class)]
-    #if field_name not in fields:
-        #print(f"Field {field_name} doesn't added to {feature_class}.")
-    #else:
-        #print(f"Field {field_name} already exists in {feature_class}.")
+def check_field_existence(feature_class, field_name):
+    """
+    Check if a specified field exists within a given feature class.
+    Parameters:
+    feature_class (str): Path to the feature class.
+    field_name (str): Name of the field to check.
+    """
+    fields = [field.name for field in arcpy.ListFields(feature_class)]
+    if field_name not in fields:
+        print(f"Field {field_name} doesn't added to {feature_class}.")
+    else:
+        print(f"Field {field_name} already exists in {feature_class}.")
 
 def update_fc_from_dict(source_fc, destination_fc, source_key_field, destination_key_field, field_pairs, where_clause):
     """
