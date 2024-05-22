@@ -37,6 +37,7 @@ template = None
 has_m = "DISABLED"
 has_z = "DISABLED"
 spatial_reference = arcpy.Describe(r"D:\UN\set_DB\databases\GISRO_PILOT.gdb\StationBoundary").spatialReference  #get from existing fc
+
 arcpy.management.CreateFeatureclass(output_path, output_name, geometry_type, template, has_m, has_z, spatial_reference)
 output_feature_class = r"D:\UN\set_DB\databases\GISRO_PILOT.gdb\Station_polygon.shp"
 
