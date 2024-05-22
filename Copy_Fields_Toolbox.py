@@ -1,4 +1,5 @@
-
+# This ArcPy tool copies non-duplicate fields from a template feature class to a target feature class 
+# ensures the target feature class remains unchanged if fields already exist
 
 # -*- coding: utf-8 -*-
 
