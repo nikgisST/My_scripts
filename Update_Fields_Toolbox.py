@@ -1,4 +1,4 @@
-# This ArcPy tool updates feature classes in a specified target database by executing a Python script file(.py)
+# This ArcPy tool updates feature classes in a specified target database by executing a Python script file(.py).
 
 # -*- coding: utf-8 -*-
 
