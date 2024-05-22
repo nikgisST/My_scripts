@@ -1,3 +1,7 @@
+# This code creates a new polygon feature class in a geodatabase, 
+# then generates square polygons centered at given coordinates from a dictionary of station points, 
+# finally inserts these polygons into the feature class using an ArcPy InsertCursor.
+
 # Arcpy module is for working with spatial data
 import arcpy
 
