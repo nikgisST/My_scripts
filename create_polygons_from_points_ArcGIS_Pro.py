@@ -19,14 +19,14 @@ def square_polygon(center_x, center_y, size):
 
 
 # A dictionary of station values: {OBJECTID: [Geometry Type, Name, X_coordinate, Y_coordinate]}
-stations_point_geometry = {
+stations_point_fc = {
     1: ["Point", "PTCZ 9 GAVANA", -0.910843, 0.338404],
     2: ["Point", "PTCZ 11 GAVANA", -0.594578, 0.37003],
     3: ["Point", "PTCZ 14 GAVANA", 0.082229, -0.290964],
     4: ["Point", "PTCZ 3 GAVANA", -1.068976, -0.433283],
-    5: ["Point", "PTCZ 3 GAVANA", 0.638855, 0.550301],
-    6: ["Point", "PTCZ 14 GAVANA", -1.606627, 0.7875],
-    7: ["Point", "PTCZ 14 GAVANA", 1.530723, -0.815964],
+    5: ["Point", "PTCZ 13 GAVANA", 0.638855, 0.550301],
+    6: ["Point", "PTCZ 114 GAVANA", -1.606627, 0.7875],
+    7: ["Point", "PTCZ 1114 GAVANA", 1.530723, -0.815964],
 }
 
 # Local variables for creating a new feature class Station_polygon (or shapefile + .shp)
@@ -43,7 +43,7 @@ output_feature_class = r"D:\UN\set_DB\databases\GISRO_PILOT.gdb\Station_polygon.
 
 # InsertCursor adds square polygons to the new feature class
 with arcpy.da.InsertCursor(output_feature_class, ["SHAPE@"]) as cursor:
-    for OBJECTID, station_values in stations_point_geometry.items():
+    for OBJECTID, station_values in stations_point_fc.items():
         SIZE_SQUARE = 1
         station_name = station_values[1]
         center_x = station_values[2]
