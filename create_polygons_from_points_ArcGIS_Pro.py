@@ -39,10 +39,10 @@ has_z = "DISABLED"
 spatial_reference = arcpy.Describe(r"D:\UN\set_DB\databases\GISRO_PILOT.gdb\StationBoundary").spatialReference  #get from existing fc
 
 arcpy.management.CreateFeatureclass(output_path, output_name, geometry_type, template, has_m, has_z, spatial_reference)
-output_feature_class = r"D:\UN\set_DB\databases\GISRO_PILOT.gdb\Station_polygon.shp"
+station_polygon_fc = r"D:\UN\set_DB\databases\GISRO_PILOT.gdb\Station_polygon.shp"
 
 # InsertCursor adds square polygons to the new feature class
-with arcpy.da.InsertCursor(output_feature_class, ["SHAPE@"]) as cursor:
+with arcpy.da.InsertCursor(station_polygon_fc, ["SHAPE@"]) as cursor:
     for OBJECTID, station_values in stations_point_fc.items():
         SIZE_SQUARE = 1
         station_name = station_values[1]
