@@ -1,3 +1,6 @@
+# This ArcPy tool reads a CSV file to add specified fields to feature classes within a target geodatabase
+# Ensures existing fields are not overwritten.
+
 # -*- coding: utf-8 -*-
 
 import arcpy
