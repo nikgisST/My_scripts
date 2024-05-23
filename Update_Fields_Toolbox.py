@@ -1,97 +1,78 @@
 # This ArcPy tool updates feature classes in a specified target database by executing a Python script file(.py).
 
-# -*- coding: utf-8 -*-
-
 import arcpy
 import os
+import sys
 
 class Toolbox(object):
     def __init__(self):
-        """Define the toolbox (the name of the toolbox is the name of the
-        .pyt file)."""
-        self.label = "Toolbox"
-        self.alias = "toolbox"
+        self.label = "Update Feature Classes Toolbox"
+        self.alias = "UpdateFC"
+        self.tools = [UpdateFeatureClassesTool]
 
-        # List of tool classes associated with this toolbox
-        self.tools = [Tool]
-
-
-class Tool(object):
+class UpdateFeatureClassesTool(object):
     def __init__(self):
-        """Define the tool (tool name is the name of the class)."""
-        self.label = "Update Tool"
-        self.description = "Tool to update feature classes based on different rules."
+        self.label = "Update Feature Classes"
+        self.description = "Update feature classes based on a script and geodatabase"
         self.canRunInBackground = False
 
     def getParameterInfo(self):
-        """Define parameter definitions"""
+        # Define parameters
         params = []
 
-        # Input parameter for Python script file
-        python_script_param = arcpy.Parameter(
-            displayName="Python Script File",
-            name="python_script",
+        param0 = arcpy.Parameter(
+            displayName="Script File",
+            name="script_file",
             datatype="DEFile",
             parameterType="Required",
-            direction="Input")
-        python_script_param.filter.list = ['py']  # allow .py files only
-        params.append(python_script_param)
+            direction="Input"
+        )
+        params.append(param0)
 
-        # Input parameter for Target Database
-        target_db_param = arcpy.Parameter(
-            displayName="Target Database",
-            name="target_db",
+        param1 = arcpy.Parameter(
+            displayName="Geodatabase",
+            name="geodatabase",
             datatype="DEWorkspace",
             parameterType="Required",
-            direction="Input")
-        params.append(target_db_param)
+            direction="Input"
+        )
+        params.append(param1)
 
         return params
 
     def isLicensed(self):
-        """Set whether tool is licensed to execute."""
         return True
 
     def updateParameters(self, parameters):
-        """Modify the values and properties of parameters before internal
-        validation is performed.  This method is called whenever a parameter
-        has been changed."""
         return
 
     def updateMessages(self, parameters):
-        """Modify the messages created by internal validation for each tool
-        parameter.  This method is called after internal validation."""
         return
 
     def execute(self, parameters, messages):
-        """The source code of the tool."""
-        python_script = parameters[0].valueAsText
-        target_db = parameters[1].valueAsText
+        script_file = parameters[0].valueAsText
+        geodatabase = parameters[1].valueAsText
 
-        # Log the input parameters
-        arcpy.AddMessage(f"Python script: {python_script}")
-        arcpy.AddMessage(f"Target database: {target_db}")
+        # Set the workspace to the provided geodatabase
+        arcpy.env.workspace = geodatabase
 
-        # User confirmation prompt
-        #if arcpy.GetActiveWindow():
-           # response = arcpy.GetActiveWindow().MessageBox("Do you want to proceed with updating the data?", "Confirm", 4)
-            #if response != 6:  # 6 means "Yes"
-                #arcpy.AddMessage("Operation cancelled by user.")
-                #return
-            
-        # Read the Python script file
-        with open(python_script, 'r') as file:
-            script_content = file.read()
+        # Import the script
+        script_dir, script_name = os.path.split(script_file)
+        script_name = os.path.splitext(script_name)[0]
 
-        # Create a log file
-        #log_file_path = os.path.join(os.path.dirname(python_script), 'update_log.txt')
-        #with open(log_file_path, 'w') as log_file:
-            #log_file.write("Log of updates:\n")
-            #log_file.write("=================\n")
+        # Add the script directory to the system path
+        sys.path.insert(0, script_dir)
 
-        # Execute the script content in the current namespace with the log file
-        exec(script_content, {'arcpy': arcpy, 'target_db': target_db})
+        try:
+            script_module = __import__(script_name)
+        except ModuleNotFoundError as e:
+            arcpy.AddError(f"Error importing script: {e}")
+            raise
 
-        arcpy.AddMessage(f"Script executed successfully.")
+        # Call the main function from the imported script module
+        if hasattr(script_module, 'main'):
+            script_module.main()
+        else:
+            arcpy.AddError("The script does not contain a 'main' function.")
 
         return
