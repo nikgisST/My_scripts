@@ -1,5 +1,6 @@
 import pandas as pd
 
+# Dictionary for substituting values in specific columns of different sheets
 substitution_dicts = {
     'Стълб': {'Подтип': {0: 'Стълб - недиференцирано', 1: 'Дървен', 2: 'Композитен', 3: 'Стоманорешетъчен',
                          4: 'Стоманотръбен', 5: 'Стоманобетонен'}},
@@ -11,6 +12,8 @@ substitution_dicts = {
                                 7: 'L1-L2-L3'}}
 }
 
+
+# Function to add additional headers to the Excel file
 def add_additional_headers(intermediate_result_path, result_path):
     xlsx = pd.ExcelFile(intermediate_result_path)
     header_length = {
@@ -21,40 +24,48 @@ def add_additional_headers(intermediate_result_path, result_path):
         'ИЗКС': {'start': 1, 'end': None},
         'Проводник': {'start': 1, 'end': None},
     }
-    modified_df = {}   #modified DataFrames for each sheet
-    headers_dict = {}  #headers for each sheet
+    
+    modified_df = {}   # Dictionary to hold modified DataFrames for each sheet
+    headers_dict = {}  # Dictionary to hold headers for each sheet
 
+     # Iterate through each sheet in the Excel file
     for sheet_name in xlsx.sheet_names:
         df = pd.read_excel(xlsx, sheet_name=sheet_name, header=None) # Load each sheet into a DataFrame
 
+        # Get start and end indices for the current sheet
         indices = header_length.get(sheet_name, {'start': 0, 'end': None})  #start and end indices for the current sheet
         headers = df.iloc[0, indices['start']:indices['end']].dropna().tolist() # Extract headers based on start and end indices
         headers_dict[sheet_name] = headers    # Store the headers in the dictionary
 
+        # Add additional headers to the existing one
         additional_headers = headers + ['Забележка ЕРМЗ', 'Pontech'] * 3
         new_headers = pd.Series(additional_headers)   # Create a new DataFrame to store the additional headers
         all_headers_df = pd.concat([df, pd.DataFrame([new_headers])], axis=1)
         modified_df[sheet_name] = all_headers_df   # Add the modified DataFrame to the dictionary
 
+    # Write modified DataFrames to a new Excel file
     with pd.ExcelWriter(result_path, engine='openpyxl') as result:    # openpyxl is used for writing the .xlsx file; default: xlsxwriter
         for sheet, modified_df in modified_df.items():
             modified_df.to_excel(result, sheet_name=sheet, index=False, header=False)
     return result_path
 
 
+# Function to apply substitutions and create additional columns
 def apply_substitutions(source_file_path, result_path, substitution_dicts):
     xlsx = pd.ExcelFile(source_file_path)
     with pd.ExcelWriter(result_path, engine='openpyxl') as result:  # openpyxl is used for writing the .xlsx file; default: xlsxwriter
         for sheet in xlsx.sheet_names:
             df = pd.read_excel(source_file_path, sheet_name=sheet)
             if sheet == "Стълб":
-                df = df.drop(columns=['Линк'])  # , errors='ignore' --> not raise an error if a column ('Линк') does not exist in the DataFrame.
+                df = df.drop(columns=['Линк'])  # Drop 'Линк' column if it exists
 
+            # Apply substitutions based on the dictionary
             if sheet in substitution_dicts:
                 for column, mapping_value in substitution_dicts[sheet].items():
                     df[column] = df[column].map(mapping_value).fillna(df[column])
             df.to_excel(result, index=False, sheet_name=sheet)
 
+        # Create a 'Коментари в ГИС' sheet with specific columns
         comments_column = pd.DataFrame(columns=['OBJECTID *', 'Текст', 'Забележка ЕРМЗ',
                                                 'Pontech', 'Забележка ЕРМЗ', 'Pontech',
                                                 'Забележка ЕРМЗ', 'Pontech'])
@@ -62,12 +73,14 @@ def apply_substitutions(source_file_path, result_path, substitution_dicts):
     return result_path
 
 
+# Main function to call the above functions in sequence
 def main(source_file_path, result_path):
     intermediate_result_path = apply_substitutions(source_file_path, result_path, substitution_dicts)
     final_result_path = add_additional_headers(intermediate_result_path, result_path)
     print(f"Updated file saved to: {final_result_path}")
 
 
+# If this script is run directly, execute the main function
 if __name__ == "__main__":
     source_file_path = r"D:\scripts\excel проверки\ВП1057-ВЕЦ Брусен-Искър-VR6401-20 kV-2.1.xlsx"
     result_path = r"D:\scripts\excel проверки\ВП1057 Искър - проверка.xlsx"
