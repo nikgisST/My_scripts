@@ -16,7 +16,8 @@ substitution_dicts = {
 # Function to add additional headers to the Excel file
 def add_additional_headers(intermediate_result_path, result_path):
     xlsx = pd.ExcelFile(intermediate_result_path)
-    header_length = {
+    
+    copied_header_length = {
         'Стълб': {'start': 1, 'end': -3},
         'Оборудване на стълб': {'start': 1, 'end': None},
         'РОМ - РОС': {'start': 1, 'end': None},
@@ -33,7 +34,7 @@ def add_additional_headers(intermediate_result_path, result_path):
         df = pd.read_excel(xlsx, sheet_name=sheet_name, header=None)  # Load each sheet into a DataFrame
 
         # Get start and end indices for the current sheet
-        indices = header_length.get(sheet_name, {'start': 0, 'end': None})  
+        indices = copied_header_length.get(sheet_name, {'start': 0, 'end': None})  
         
         # Extract headers based on start and end indices
         headers = df.iloc[0, indices['start']:indices['end']].dropna().tolist() 
