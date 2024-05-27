@@ -34,7 +34,7 @@ def add_additional_headers(intermediate_result_path, result_path):
         df = pd.read_excel(xlsx, sheet_name=sheet_name, header=None)  # Load each sheet into a DataFrame
 
         # Get start and end indices for the current sheet
-        indices = copied_header_length.get(sheet_name, {'start': 0, 'end': None})  
+        indices = copied_header_length.get(sheet_name, {'start': 0, 'end': None})  # defaults
         
         # Extract headers based on start and end indices
         headers = df.iloc[0, indices['start']:indices['end']].dropna().tolist() 
