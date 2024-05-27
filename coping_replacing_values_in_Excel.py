@@ -30,18 +30,28 @@ def add_additional_headers(intermediate_result_path, result_path):
 
      # Iterate through each sheet in the Excel file
     for sheet_name in xlsx.sheet_names:
-        df = pd.read_excel(xlsx, sheet_name=sheet_name, header=None) # Load each sheet into a DataFrame
+        df = pd.read_excel(xlsx, sheet_name=sheet_name, header=None)  # Load each sheet into a DataFrame
 
         # Get start and end indices for the current sheet
-        indices = header_length.get(sheet_name, {'start': 0, 'end': None})  #start and end indices for the current sheet
-        headers = df.iloc[0, indices['start']:indices['end']].dropna().tolist() # Extract headers based on start and end indices
-        headers_dict[sheet_name] = headers    # Store the headers in the dictionary
+        indices = header_length.get(sheet_name, {'start': 0, 'end': None})  
+        
+        # Extract headers based on start and end indices
+        headers = df.iloc[0, indices['start']:indices['end']].dropna().tolist() 
+        
+         # Store the headers in the dictionary
+        headers_dict[sheet_name] = headers   
 
         # Add additional headers to the existing one
         additional_headers = headers + ['Забележка ЕРМЗ', 'Pontech'] * 3
-        new_headers = pd.Series(additional_headers)   # Create a new DataFrame to store the additional headers
-        all_headers_df = pd.concat([df, pd.DataFrame([new_headers])], axis=1)
-        modified_df[sheet_name] = all_headers_df   # Add the modified DataFrame to the dictionary
+
+        # Create a new DataFrame to store the additional headers
+        new_headers = pd.Series(additional_headers)   
+
+        # Concatenate additional headers to DataFrame
+        all_headers_df = pd.concat([df, pd.DataFrame([new_headers])], axis=1)   
+
+        # Add the modified DataFrame to the dictionary
+        modified_df[sheet_name] = all_headers_df  
 
     # Write modified DataFrames to a new Excel file
     with pd.ExcelWriter(result_path, engine='openpyxl') as result:    # openpyxl is used for writing the .xlsx file; default: xlsxwriter
