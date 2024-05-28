@@ -1,4 +1,5 @@
 import pandas as pd
+import os
 
 # Dictionary for substituting values in specific columns of different sheets
 substitution_dicts = {
@@ -93,6 +94,7 @@ def main(source_file_path, result_path):
 
 # If this script is run directly, execute the main function
 if __name__ == "__main__":
-    source_file_path = r"D:\scripts\excel проверки\ВП1057-ВЕЦ Брусен-Искър-VR6401-20 kV-2.1.xlsx"
-    result_path = r"D:\scripts\excel проверки\ВП1057 Искър - проверка.xlsx"
+    env = r"D:\scripts\excel проверки"
+    source_file_path = os.path.join(env, "ВП1057-ВЕЦ Брусен-Искър-VR6401-20 kV-2.1.xlsx")
+    result_path = os.path.join(env, "ВП1057 Искър - проверка.xlsx")
     main(source_file_path, result_path)
