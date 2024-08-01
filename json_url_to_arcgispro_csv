@@ -1,0 +1,13 @@
+import pandas as pd
+import requests
+
+# Fetch the JSON data
+url = "https://cckpapi.worldbank.org/cckp/v1/pop-x1_climatology_popcount_climatology_annual_2020-2039_mean_ssp4_gpw-v4_rev11_mean/region_ecs?_format=json"
+response = requests.get(url)
+data = response.json()
+
+# Convert JSON to DataFrame
+df = pd.json_normalize(data)
+
+# Save DataFrame to CSV
+df.to_csv(r'D:\data.csv', index=False)
